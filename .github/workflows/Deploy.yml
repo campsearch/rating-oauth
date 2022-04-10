@@ -1,0 +1,40 @@
+
+IntelliJ IDEAPhpStormWebStorm
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  repository_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
+    - run: yarn install
+
+    - run: yarn build
+      env:
+        NODE_ENV: production
+
+    - run: yarn deploy
+      env:
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        STATE_PASSWORD: ${{ secrets.STATE_PASSWORD }}
+        ORIGINS: ${{ secrets.ORIGINS }}
+        CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+        CLOUDFLARE_API_KEY: ${{secrets.CLOUDFLARE_API_KEY}}
+        CLOUDFLARE_ZONE_ID: ${{secrets.CLOUDFLARE_ZONE_ID}}
+        CLOUDFLARE_ACCOUNT_ID: ${{secrets.CLOUDFLARE_ACCOUNT_ID}}
+        CLOUDFLARE_WORKERS_DEV_PROJECT: ${{secrets.CLOUDFLARE_WORKERS_DEV_PROJECT}}
